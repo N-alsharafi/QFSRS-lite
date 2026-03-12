@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Amiri } from "next/font/google";
+import { Geist, Geist_Mono, Aref_Ruqaa } from "next/font/google";
 import { DEFAULT_THEME_COLOR } from "@/lib/constants/theme";
 import "./globals.css";
 
@@ -13,10 +13,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const amiri = Amiri({
-  weight: ['400', '700'],
+const arefRuqaa = Aref_Ruqaa({
+  weight: ['700'],
   subsets: ["arabic"],
-  variable: "--font-amiri",
+  variable: "--font-aref-ruqaa",
 });
 
 export const metadata: Metadata = {
@@ -44,13 +44,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet" />
-      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${amiri.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${arefRuqaa.variable} antialiased`}
       >
         {children}
       </body>

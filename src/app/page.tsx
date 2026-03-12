@@ -39,12 +39,12 @@ export default function Home() {
 
       <main className="relative z-10 flex w-full max-w-7xl flex-col items-center gap-16 px-8 py-20">
         {/* Hero Section with Arabic Calligraphy */}
-        <div className="text-center space-y-8">
+        <div className="text-center">
           {/* Decorative Top Border */}
-          <div className={`mx-auto w-32 h-1 ${styles.decorative} rounded-full mb-8`} />
+          <div className={`mx-auto w-32 h-1 ${styles.decorative} rounded-full mb-12`} />
           
           {/* Arabic Calligraphy */}
-          <div className={`relative ${styles.title}`}>
+          <div className={`relative ${styles.title} mb-20`}>
             <div 
               className="arabic-text text-8xl md:text-9xl font-bold tracking-wider"
               style={{ 
@@ -63,17 +63,17 @@ export default function Home() {
           </div>
 
           {/* English Subtitle */}
-          <div className="space-y-3">
+          <div className="space-y-4 mb-12">
             <h2 className={`text-4xl md:text-5xl font-bold ${styles.title}`}>
               Raj3
             </h2>
-            <p className={`text-xl md:text-2xl ${styles.subtitle} max-w-2xl mx-auto`}>
+            <p className={`text-xl md:text-2xl ${styles.subtitle} max-w-4xl mx-auto`}>
               Master Quran memorization through the power of spaced repetition
             </p>
           </div>
 
           {/* Decorative Bottom Border */}
-          <div className={`mx-auto w-32 h-1 ${styles.decorative} rounded-full mt-8`} />
+          <div className={`mx-auto w-32 h-1 ${styles.decorative} rounded-full`} />
         </div>
 
         {/* Theme Switcher */}
@@ -132,8 +132,8 @@ export default function Home() {
         {/* Feature Highlights */}
         <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mt-8`}>
           {[
-            { icon: '🔒', title: 'Local-First', desc: 'Your data stays on your device' },
-            { icon: '📴', title: 'Offline-Ready', desc: 'Works without internet' },
+            { icon: '👋', title: 'Open Source', desc: 'You can contribute the features you want' },
+            { icon: '📴', title: 'Offline', desc: 'Your data is only on your device' },
             { icon: '🎓', title: 'Science-Based', desc: 'FSRS spaced repetition' },
           ].map((feature, i) => (
             <div
@@ -149,14 +149,8 @@ export default function Home() {
 
         {/* Footer */}
         <div className={`text-center space-y-4 mt-8 ${styles.text}`}>
-          <div className={`inline-flex items-center gap-3 px-8 py-4 rounded-full ${styles.accent} shadow-lg`}>
-            <span>✨</span>
-            <span className="font-semibold">Privacy-Focused • Open Source • Free Forever</span>
-            <span>✨</span>
-          </div>
           <p className={`text-sm ${styles.subtitle} max-w-2xl mx-auto leading-relaxed`}>
-            Raj3 runs completely on your local machine. No accounts, no tracking, no cloud storage.
-            Your Quran memorization journey remains private and sacred.
+            This version of Raj3 runs completely on your local machine. No accounts, no tracking, no cloud storage.
           </p>
         </div>
       </main>
