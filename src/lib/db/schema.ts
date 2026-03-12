@@ -10,7 +10,7 @@ export class QuranFSRSDatabase extends Dexie {
     super('QuranFSRSDB');
     
     this.version(1).stores({
-      cards: 'id, userId, pageNumber, state, due, updatedAt',
+      cards: 'id, userId, surahNumber, pageNumber, state, due, updatedAt',
       reviewLogs: 'id, userId, cardId, reviewedAt, synced',
       config: 'id, userId',
     });

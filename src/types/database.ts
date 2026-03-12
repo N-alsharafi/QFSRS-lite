@@ -1,8 +1,11 @@
 import { Rating, State } from 'ts-fsrs';
 
 /**
- * Card interface for FSRS tracking at the Page Level (Phase 1: 604 pages)
- * Each card represents one page of the Quran with its spaced repetition state
+ * Card interface for FSRS tracking with Surah Hierarchy
+ * 
+ * Cards follow a surah-first model:
+ * - Multi-page surahs (e.g., Al-Baqarah): One card per page
+ * - Single-page surahs (e.g., Al-Ikhlas): One card per surah
  */
 export interface Card {
   /** UUID v4 - Unique identifier for the card (future-proof for backend sync) */
@@ -12,7 +15,12 @@ export interface Card {
    * This allows future backend sync without schema migration */
   userId: string | null;
   
-  /** Page number in the Quran (1-604) */
+  /** Surah number (1-114) - Every card belongs to exactly one surah */
+  surahNumber: number;
+  
+  /** Page number in the Quran (1-604)
+   * For multi-page surahs: The specific page this card represents
+   * For single-page surahs: The page where this surah appears */
   pageNumber: number;
   
   /** FSRS card state: New, Learning, Review, or Relearning */
