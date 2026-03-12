@@ -1,63 +1,163 @@
-import Image from "next/image";
+'use client';
+
+import Link from "next/link";
+import { useThemeStore } from '@/lib/stores/theme-store';
+import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher';
+import { IslamicPattern } from '@/components/ui/IslamicPattern';
 
 export default function Home() {
+  const { currentTheme } = useThemeStore();
+  const isDark = currentTheme === 'tamkeen-dark';
+
+  // Tamkeen theme styles
+  const styles = isDark ? {
+    background: 'bg-tamkeenDark-background',
+    card: 'bg-tamkeenDark-surface/90 backdrop-blur-sm border-2 border-tamkeenDark-primary/30',
+    title: 'text-tamkeenDark-primary',
+    subtitle: 'text-tamkeenDark-textMuted',
+    text: 'text-tamkeenDark-text',
+    accent: 'bg-tamkeenDark-primary text-tamkeenDark-background font-semibold',
+    accentBorder: 'border-tamkeenDark-accent',
+    hover: 'hover:border-tamkeenDark-accent hover:shadow-xl hover:shadow-tamkeenDark-accent/30',
+    decorative: 'bg-gradient-to-br from-tamkeenDark-primary to-tamkeenDark-accent',
+  } : {
+    background: 'bg-tamkeen-background',
+    card: 'bg-tamkeen-surface/90 backdrop-blur-sm border-2 border-tamkeen-accent/20',
+    title: 'text-tamkeen-primary',
+    subtitle: 'text-tamkeen-textMuted',
+    text: 'text-tamkeen-text',
+    accent: 'bg-tamkeen-primary text-tamkeen-surface font-semibold',
+    accentBorder: 'border-tamkeen-primary',
+    hover: 'hover:border-tamkeen-primary hover:shadow-xl hover:shadow-tamkeen-primary/20',
+    decorative: 'bg-gradient-to-br from-tamkeen-primary to-tamkeen-accent',
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className={`relative flex min-h-screen flex-col items-center justify-center ${styles.background} transition-colors duration-500`}>
+      {/* Islamic Geometric Pattern Background */}
+      <IslamicPattern theme={currentTheme} />
+
+      <main className="relative z-10 flex w-full max-w-7xl flex-col items-center gap-16 px-8 py-20">
+        {/* Hero Section with Arabic Calligraphy */}
+        <div className="text-center space-y-8">
+          {/* Decorative Top Border */}
+          <div className={`mx-auto w-32 h-1 ${styles.decorative} rounded-full mb-8`} />
+          
+          {/* Arabic Calligraphy */}
+          <div className={`relative ${styles.title}`}>
+            <div 
+              className="arabic-text text-8xl md:text-9xl font-bold tracking-wider"
+              style={{ 
+                textShadow: '3px 3px 6px rgba(0,0,0,0.15)'
+              }}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              راجِع
+            </div>
+            {/* Subtle glow effect */}
+            <div 
+              className={`absolute inset-0 arabic-text text-8xl md:text-9xl font-bold tracking-wider blur-2xl opacity-30 ${styles.title}`}
+              aria-hidden="true"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              راجِع
+            </div>
+          </div>
+
+          {/* English Subtitle */}
+          <div className="space-y-3">
+            <h2 className={`text-4xl md:text-5xl font-bold ${styles.title}`}>
+              Raj3
+            </h2>
+            <p className={`text-xl md:text-2xl ${styles.subtitle} max-w-2xl mx-auto`}>
+              Master Quran memorization through the power of spaced repetition
+            </p>
+          </div>
+
+          {/* Decorative Bottom Border */}
+          <div className={`mx-auto w-32 h-1 ${styles.decorative} rounded-full mt-8`} />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        {/* Theme Switcher */}
+        <div className={`${styles.card} rounded-2xl shadow-xl overflow-hidden p-8`}>
+          <div className={`text-center mb-6`}>
+            <h3 className={`text-2xl font-bold mb-2 ${styles.title}`}>
+              Appearance
+            </h3>
+            <p className={`text-sm ${styles.subtitle}`}>
+              Choose light or dark mode
+            </p>
+          </div>
+          <ThemeSwitcher />
+        </div>
+
+        {/* Feature Cards with Islamic-inspired design */}
+        <div className="grid gap-8 md:grid-cols-2 w-full max-w-4xl">
+          <Link
+            href="/reader"
+            className={`group relative flex flex-col items-center gap-6 rounded-2xl ${styles.card} p-10 shadow-xl transition-all hover:scale-105 ${styles.hover}`}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            {/* Decorative corner */}
+            <div className={`absolute top-0 right-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-bl-full`} />
+            <div className={`absolute bottom-0 left-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-tr-full`} />
+            
+            <div className="text-6xl group-hover:scale-110 transition-transform">📖</div>
+            <h3 className={`text-3xl font-bold ${styles.title}`}>
+              Start Reading
+            </h3>
+            <p className={`text-center ${styles.subtitle} leading-relaxed`}>
+              Experience the Quran with spatial consistency, designed for deep memorization
+            </p>
+            <div className={`mt-2 px-4 py-1 rounded-full text-sm ${styles.accent}`}>
+              Begin Journey →
+            </div>
+          </Link>
+
+          <div className={`group relative flex flex-col items-center gap-6 rounded-2xl ${styles.card} p-10 shadow-xl transition-all hover:scale-105 ${styles.hover}`}>
+            {/* Decorative corner */}
+            <div className={`absolute top-0 right-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-bl-full`} />
+            <div className={`absolute bottom-0 left-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-tr-full`} />
+            
+            <div className="text-6xl group-hover:scale-110 transition-transform">🎯</div>
+            <h3 className={`text-3xl font-bold ${styles.title}`}>
+              Review Sessions
+            </h3>
+            <p className={`text-center ${styles.subtitle} leading-relaxed`}>
+              Optimize your retention with FSRS-powered intelligent review scheduling
+            </p>
+            <div className={`mt-2 px-4 py-1 rounded-full text-sm ${styles.accent}`}>
+              Coming Soon
+            </div>
+          </div>
+        </div>
+
+        {/* Feature Highlights */}
+        <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mt-8`}>
+          {[
+            { icon: '🔒', title: 'Local-First', desc: 'Your data stays on your device' },
+            { icon: '📴', title: 'Offline-Ready', desc: 'Works without internet' },
+            { icon: '🎓', title: 'Science-Based', desc: 'FSRS spaced repetition' },
+          ].map((feature, i) => (
+            <div
+              key={i}
+              className={`flex flex-col items-center gap-3 p-6 rounded-xl ${styles.card} shadow-lg text-center transition-all hover:scale-105`}
+            >
+              <div className="text-4xl">{feature.icon}</div>
+              <h4 className={`font-bold text-lg ${styles.title}`}>{feature.title}</h4>
+              <p className={`text-sm ${styles.subtitle}`}>{feature.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className={`text-center space-y-4 mt-8 ${styles.text}`}>
+          <div className={`inline-flex items-center gap-3 px-8 py-4 rounded-full ${styles.accent} shadow-lg`}>
+            <span>✨</span>
+            <span className="font-semibold">Privacy-Focused • Open Source • Free Forever</span>
+            <span>✨</span>
+          </div>
+          <p className={`text-sm ${styles.subtitle} max-w-2xl mx-auto leading-relaxed`}>
+            Raj3 runs completely on your local machine. No accounts, no tracking, no cloud storage.
+            Your Quran memorization journey remains private and sacred.
+          </p>
         </div>
       </main>
     </div>

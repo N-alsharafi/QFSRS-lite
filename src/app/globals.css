@@ -1,26 +1,43 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/* CSS Variables for Tamkeen Theme Colors - matches tailwind.config.ts */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Tamkeen Light */
+    --tamkeen-primary: #CC7722;
+    --tamkeen-accent: #556B2F;
+    --tamkeen-background: #F0EBE3;
+    --tamkeen-surface: #FFFFFF;
+    --tamkeen-text: #2D2416;
+    --tamkeen-text-muted: #5A4A3A;
+    
+    /* Tamkeen Dark */
+    --tamkeen-dark-primary: #E89952;
+    --tamkeen-dark-accent: #8FBC8F;
+    --tamkeen-dark-background: #0F1A13;
+    --tamkeen-dark-surface: #1A2820;
+    --tamkeen-dark-text: #F0EBE3;
+    --tamkeen-dark-text-muted: #B8C4B8;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Arabic Typography Enhancement */
+@layer utilities {
+  .arabic-text {
+    font-family: 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Smooth transitions for theme switching */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
 }
