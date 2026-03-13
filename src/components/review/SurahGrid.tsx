@@ -165,10 +165,10 @@ export function SurahGrid() {
       </div>
       
       {/* View Mode Selector */}
-      <div className="flex gap-2 mb-6" dir="ltr">
+      <div className="flex flex-wrap items-center w-full mb-6 gap-3" dir="ltr">
         <button
           onClick={() => setViewMode('juz')}
-          className={`px-4 py-2 rounded-lg font-semibold transition-all hover:scale-105 ${
+          className={`flex-1 min-w-[100px] px-4 py-2.5 rounded-lg font-semibold transition-all hover:scale-105 ${
             viewMode === 'juz' ? buttonActive : buttonBase
           }`}
         >
@@ -177,17 +177,17 @@ export function SurahGrid() {
         
         <button
           onClick={() => setViewMode('surah')}
-          className={`px-4 py-2 rounded-lg font-semibold transition-all hover:scale-105 ${
+          className={`flex-1 min-w-[100px] px-4 py-2.5 rounded-lg font-semibold transition-all hover:scale-105 ${
             viewMode === 'surah' ? buttonActive : buttonBase
           }`}
         >
           Surah
         </button>
         
-        <div className="flex">
+        <div className="flex flex-1 min-w-[240px]">
           <button
             onClick={() => setViewMode('hizb-full')}
-            className={`px-4 py-2 rounded-l-lg font-semibold transition-all hover:scale-105 ${
+            className={`flex-1 px-3 py-2.5 rounded-l-lg font-semibold transition-all hover:scale-105 text-sm ${
               viewMode === 'hizb-full' ? buttonActive : buttonBase
             }`}
           >
@@ -195,7 +195,7 @@ export function SurahGrid() {
           </button>
           <button
             onClick={() => setViewMode('hizb-half')}
-            className={`px-4 py-2 font-semibold transition-all hover:scale-105 border-l-0 ${
+            className={`flex-1 px-3 py-2.5 font-semibold transition-all hover:scale-105 border-l-0 text-sm ${
               viewMode === 'hizb-half' ? buttonActive : buttonBase
             }`}
           >
@@ -203,7 +203,7 @@ export function SurahGrid() {
           </button>
           <button
             onClick={() => setViewMode('hizb-quarter')}
-            className={`px-4 py-2 rounded-r-lg font-semibold transition-all hover:scale-105 border-l-0 ${
+            className={`flex-1 px-3 py-2.5 rounded-r-lg font-semibold transition-all hover:scale-105 border-l-0 text-sm ${
               viewMode === 'hizb-quarter' ? buttonActive : buttonBase
             }`}
           >
