@@ -182,6 +182,7 @@ export function getAllHizbQuartersWithSurahs() {
     
     return {
       number: quarterNum,
+      quarterId: quarterNum, // For consistency with other Hizb functions
       juz: quarterMeta.juz,
       juzPart: quarterMeta.juzPart,
       hizbId: quarterMeta.hizbId,
@@ -213,6 +214,7 @@ export function getAllHizbHalvesWithSurahs() {
       
       halves.push({
         number: Math.floor(i / 2) + 1,
+        quarterId: q1.number as RubAlHizbId, // Use first quarter's ID for naming
         juz: q1.juz,
         startPage: q1.startPage,
         endPage: q2.endPage,
@@ -249,6 +251,7 @@ export function getAllHizbsWithSurahs() {
       
       hizbs.push({
         number: Math.floor(i / 4) + 1,
+        quarterId: q1.number as RubAlHizbId, // Use first quarter's ID for naming
         juz: q1.juz,
         startPage: q1.startPage,
         endPage: q4.endPage,
