@@ -7,6 +7,10 @@ import { IslamicPattern } from '@/components/ui/IslamicPattern';
 import { db } from '@/lib/db/schema';
 import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link';
+import { AddToCartForm } from '@/components/questionnaire/AddToCartForm';
+import { SelectionCart } from '@/components/questionnaire/SelectionCart';
+import { initializeCardsForPageRange } from '@/lib/quran/initializeCards';
+import { resolveCart, groupResolvedPages, type CartEntry } from '@/lib/quran/cartResolution';
 
 type QuestionnaireStep = 'config' | 'cards';
 
@@ -47,6 +51,9 @@ export default function QuestionnairePage() {
   const [dailyReviewLimit, setDailyReviewLimit] = useState('40');
   const [enableFuzz, setEnableFuzz] = useState(true);
 
+  // Step 2: Card Initialization (cart-based)
+  const [cartEntries, setCartEntries] = useState<CartEntry[]>([]);
+
   // Validation for daily review limit
   const isDailyReviewLimitValid = () => {
     const num = parseInt(dailyReviewLimit);
@@ -84,6 +91,38 @@ export default function QuestionnairePage() {
     router.push('/review');
   };
 
+  // Check if Step 2 form is valid (cart has at least one entry with resolved pages)
+  const isStep2Valid = () => {
+    if (cartEntries.length === 0) return false;
+    const resolved = resolveCart(cartEntries);
+    return resolved.size > 0;
+  };
+
+  // Handle card initialization and save (from resolved cart - one card per page, atomicity maintained)
+  const handleFinishSetup = async () => {
+    if (!isStep2Valid()) return;
+
+    try {
+      const resolved = resolveCart(cartEntries);
+      const groups = groupResolvedPages(resolved);
+
+      let cardsCreated = 0;
+      for (const group of groups) {
+        const { pages, cardOptions } = group;
+        if (pages.length === 0) continue;
+        const startPage = Math.min(...pages);
+        const endPage = Math.max(...pages);
+        const created = await initializeCardsForPageRange(startPage, endPage, cardOptions);
+        cardsCreated += created;
+      }
+
+      console.log(`✅ Setup complete! Created ${cardsCreated} cards`);
+      router.push('/review');
+    } catch (error) {
+      console.error('Error initializing cards:', error);
+    }
+  };
+
   const buttonClass = isDark 
     ? 'bg-tamkeenDark-surface/90 backdrop-blur-sm border-2 border-tamkeenDark-primary/30 text-tamkeenDark-primary hover:border-tamkeenDark-accent hover:shadow-xl hover:shadow-tamkeenDark-accent/30' 
     : 'bg-tamkeen-surface/90 backdrop-blur-sm border-2 border-tamkeen-accent/20 text-tamkeen-primary hover:border-tamkeen-primary hover:shadow-xl hover:shadow-tamkeen-primary/20';
@@ -100,7 +139,7 @@ export default function QuestionnairePage() {
         ← Back
       </Link>
 
-      <main className="relative z-10 max-w-4xl mx-auto p-6 pt-24">
+      <main className={`relative z-10 p-6 pt-24 ${currentStep === 'cards' ? 'max-w-7xl mx-auto' : 'max-w-4xl mx-auto'}`}>
         {/* Header */}
         <div className="text-center mb-12">
           <div className={`mx-auto w-32 h-1 ${styles.decorative} rounded-full mb-6`} />
@@ -108,7 +147,7 @@ export default function QuestionnairePage() {
             Let's tune the system to your needs
           </h1>
           <p className={`text-lg ${styles.subtitle} max-w-2xl mx-auto`}>
-            Your answers to the questions in this section are adjusting the system to your goals, you can change them later.
+            Your answers to the questions in this section will adjust the system to your goals, you can change them later.
           </p>
         </div>
 
@@ -284,37 +323,54 @@ export default function QuestionnairePage() {
           )}
 
           {currentStep === 'cards' && (
-            <div className="space-y-8">
-              <div>
-                <h2 className={`text-2xl font-bold ${styles.title} mb-6`}>
-                  Step 2: What Do You Already Know?
-                </h2>
-                <p className={`${styles.subtitle} mb-8`}>
-                  Tell us what you've already memorized so we can set up your cards accordingly
-                </p>
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start">
+              {/* Left: Add form */}
+              <div className="space-y-6">
+                <div>
+                  <h2 className={`text-2xl font-bold ${styles.title} mb-2`}>
+                    What Do You Already Know?
+                  </h2>
+                  <p className={`${styles.subtitle}`}>
+                    Add memorized content by page, surah, or juz. Each addition can have its own confidence level.
+                  </p>
+                </div>
+
+                <AddToCartForm
+                  entries={cartEntries}
+                  onAddEntry={(entry) => setCartEntries((prev) => [...prev, entry])}
+                  onRemoveEntry={(id) => setCartEntries((prev) => prev.filter((e) => e.id !== id))}
+                  isDark={isDark}
+                  styles={styles}
+                />
+
+                <div className="flex gap-4 pt-4">
+                  <button
+                    onClick={() => setCurrentStep('config')}
+                    className={`flex-1 px-6 py-3 rounded-lg ${styles.buttonSecondary} font-semibold transition-all hover:scale-105`}
+                  >
+                    ← Back
+                  </button>
+                  <button
+                    onClick={handleFinishSetup}
+                    disabled={!isStep2Valid()}
+                    className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
+                      isStep2Valid()
+                        ? `${styles.button} hover:scale-105`
+                        : 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-50'
+                    }`}
+                  >
+                    Finish Setup
+                  </button>
+                </div>
               </div>
 
-              {/* TODO: Card initialization form will go here */}
-              <div className={`text-center py-12 ${styles.subtitle}`}>
-                <p className="text-lg mb-4">Card initialization form coming next...</p>
-                <p className="text-sm">You'll be able to specify which pages/surahs you know</p>
-              </div>
-
-              {/* Buttons */}
-              <div className="flex gap-4 pt-6">
-                <button
-                  onClick={() => setCurrentStep('config')}
-                  className={`flex-1 px-6 py-3 rounded-lg ${styles.buttonSecondary} font-semibold transition-all hover:scale-105`}
-                >
-                  ← Back
-                </button>
-                <button
-                  onClick={() => router.push('/review')}
-                  className={`flex-1 px-6 py-3 rounded-lg ${styles.button} font-semibold transition-all hover:scale-105`}
-                >
-                  Finish Setup
-                </button>
-              </div>
+              {/* Right: Sticky cart */}
+              <SelectionCart
+                entries={cartEntries}
+                onRemoveEntry={(id) => setCartEntries((prev) => prev.filter((e) => e.id !== id))}
+                isDark={isDark}
+                styles={styles}
+              />
             </div>
           )}
         </div>
