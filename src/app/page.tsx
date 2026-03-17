@@ -26,7 +26,7 @@ export default function Home() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `raj3-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `Nukat-backup-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -41,7 +41,7 @@ export default function Home() {
       setHasConfig(true);
       router.refresh();
     } catch (err) {
-      alert('Invalid backup file. Please select a valid Raj3 export.');
+      alert('Invalid backup file. Please select a valid Nukat export.');
     }
     e.target.value = '';
   };
@@ -103,21 +103,21 @@ export default function Home() {
                 textShadow: '3px 3px 6px rgba(0,0,0,0.15)'
               }}
             >
-              راجِع
+              نُقَط
             </div>
             {/* Subtle glow effect */}
             <div 
               className={`absolute inset-0 arabic-text text-8xl md:text-9xl font-bold tracking-wider blur-2xl opacity-30 ${styles.title}`}
               aria-hidden="true"
             >
-              راجِع
+              نُقَط
             </div>
           </div>
 
           {/* English Subtitle */}
           <div className="space-y-4 mb-12">
             <h2 className={`text-4xl md:text-5xl font-bold ${styles.title}`}>
-              Raj3
+              Nukat
             </h2>
             <p className={`text-xl md:text-2xl ${styles.subtitle} max-w-4xl mx-auto`}>
               Master Quran memorization through the power of spaced repetition
@@ -256,7 +256,7 @@ export default function Home() {
         {/* Footer */}
         <div className={`text-center space-y-4 mt-8 ${styles.text}`}>
           <p className={`text-sm ${styles.subtitle} max-w-2xl mx-auto leading-relaxed`}>
-            This version of Raj3 runs completely on your local machine. No accounts, no tracking, no cloud storage.
+            This version of Nukat runs completely on your local machine. No accounts, no tracking, no cloud storage.
           </p>
         </div>
       </main>
