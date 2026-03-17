@@ -37,9 +37,9 @@ export function SurahGrid() {
     // Fetch all Juz names in parallel
     const juzData = await Promise.all(
       juzWithSurahs.map(async (juz) => {
-        // Get all cards for surahs in this Juz
-        const juzCards = allCards.filter(card => 
-          juz.surahs.some(s => s.number === card.surahNumber)
+        // Get cards whose page falls within this Juz's page range
+        const juzCards = allCards.filter(card =>
+          card.pageNumber >= juz.startPage && card.pageNumber <= juz.endPage
         );
         
         const totalCards = juzCards.length;
@@ -107,8 +107,9 @@ export function SurahGrid() {
     // Fetch all Hizb names in parallel
     const hizbData = await Promise.all(
       hizbs.map(async (hizb: any) => {
+        // Get cards whose page falls within this Hizb's page range
         const hizbCards = allCards.filter(card =>
-          hizb.surahs.some((s: any) => s.number === card.surahNumber)
+          card.pageNumber >= hizb.startPage && card.pageNumber <= hizb.endPage
         );
         
         const totalCards = hizbCards.length;
