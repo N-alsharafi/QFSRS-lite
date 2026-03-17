@@ -72,7 +72,7 @@ export function GeneralConfigForm({ config, onChange, cardCount, isDark, styles 
       {/* Confidence Slider */}
       <div>
         <label className={`block text-sm font-semibold mb-3 ${styles.label}`}>
-          How confident are you with this material?
+          How confident are you with this material (per page)?
         </label>
         <div className="space-y-3">
           <div className="relative">
