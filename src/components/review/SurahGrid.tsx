@@ -14,10 +14,21 @@ import { getJuzName, getHizbName } from '@/lib/quran/verseText';
 import { State } from 'ts-fsrs';
 import { useThemeStore } from '@/lib/stores/theme-store';
 import type { RubAlHizbId } from 'quran-meta/hafs';
+import type { CardListFilterParams } from '@/components/review/CardListModal';
 
 type ViewMode = 'juz' | 'surah' | 'hizb-full' | 'hizb-half' | 'hizb-quarter';
 
-export function SurahGrid() {
+export type IndexCardClickHandler = (
+  filterType: 'surah' | 'pageRange',
+  title: string,
+  filterParams: CardListFilterParams
+) => void;
+
+interface SurahGridProps {
+  onCardClick?: IndexCardClickHandler;
+}
+
+export function SurahGrid({ onCardClick }: SurahGridProps) {
   const { currentTheme } = useThemeStore();
   const isDark = currentTheme === 'tamkeen-dark';
   const [viewMode, setViewMode] = useState<ViewMode>('juz');
@@ -216,19 +227,32 @@ export function SurahGrid() {
       {/* Content based on view mode */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {viewMode === 'juz' && juzProgress.map(juz => (
-          <UnifiedCard key={juz.number} item={juz} isDark={isDark} type="juz" />
+          <UnifiedCard
+            key={juz.number}
+            item={juz}
+            isDark={isDark}
+            type="juz"
+            onCardClick={onCardClick}
+          />
         ))}
-        
+
         {viewMode === 'surah' && surahProgress.map(surah => (
-          <UnifiedCard key={surah.number} item={surah} isDark={isDark} type="surah" />
+          <UnifiedCard
+            key={surah.number}
+            item={surah}
+            isDark={isDark}
+            type="surah"
+            onCardClick={onCardClick}
+          />
         ))}
-        
+
         {viewMode.startsWith('hizb') && hizbProgress && hizbProgress.map(hizb => (
-          <UnifiedCard 
-            key={hizb.number} 
-            item={hizb} 
-            isDark={isDark} 
+          <UnifiedCard
+            key={hizb.number}
+            item={hizb}
+            isDark={isDark}
             type={viewMode}
+            onCardClick={onCardClick}
           />
         ))}
       </div>
@@ -256,26 +280,41 @@ interface UnifiedCardProps {
   item: any;
   isDark: boolean;
   type: 'juz' | 'surah' | 'hizb-full' | 'hizb-half' | 'hizb-quarter';
+  onCardClick?: IndexCardClickHandler;
 }
 
-function UnifiedCard({ item, isDark, type }: UnifiedCardProps) {
+function UnifiedCard({ item, isDark, type, onCardClick }: UnifiedCardProps) {
   const hasCards = item.totalCards > 0;
-  
-  const getColor = () => {
-    if (!hasCards) return 'bg-gray-400';
-    if (item.masteredPercent >= 80) return isDark ? 'bg-green-600' : 'bg-green-500';
-    if (item.masteredPercent >= 50) return isDark ? 'bg-yellow-600' : 'bg-yellow-500';
-    if (item.learningPercent >= 30) return isDark ? 'bg-orange-600' : 'bg-orange-500';
-    return isDark ? 'bg-red-600' : 'bg-red-500';
-  };
-  
-  const cardStyle = isDark 
+
+  const cardStyle = isDark
     ? 'bg-tamkeenDark-surface/90 backdrop-blur-sm border-2 border-tamkeenDark-primary/30 hover:border-tamkeenDark-accent hover:shadow-xl hover:shadow-tamkeenDark-accent/30'
     : 'bg-tamkeen-surface/90 backdrop-blur-sm border-2 border-tamkeen-accent/20 hover:border-tamkeen-primary hover:shadow-xl hover:shadow-tamkeen-primary/20';
-  
+
   const textClass = isDark ? 'text-tamkeenDark-text' : 'text-tamkeen-text';
   const mutedClass = isDark ? 'text-tamkeenDark-textMuted' : 'text-tamkeen-textMuted';
-  
+
+  const handleClick = () => {
+    if (!onCardClick) return;
+    if (type === 'surah') {
+      onCardClick('surah', item.transliteration || item.arabicName || `Surah ${item.number}`, {
+        surahNumber: item.number,
+      });
+    } else {
+      const title =
+        type === 'juz'
+          ? `Juz ${item.number}`
+          : type === 'hizb-full'
+            ? `Hizb ${item.number}`
+            : type === 'hizb-half'
+              ? getHizbHalfLabel(item.number)
+              : getHizbQuarterLabel(item.number);
+      onCardClick('pageRange', title, {
+        startPage: item.startPage,
+        endPage: item.endPage,
+      });
+    }
+  };
+
   // Get name based on type
   const getName = () => {
     if (type === 'surah') {
@@ -297,7 +336,22 @@ function UnifiedCard({ item, isDark, type }: UnifiedCardProps) {
   const pageRange = `${item.startPage}-${item.endPage}`;
   
   return (
-    <div className={`${cardStyle} p-6 rounded-lg hover:scale-105 transition-all cursor-pointer relative`}>
+    <div
+      role={onCardClick ? 'button' : undefined}
+      tabIndex={onCardClick ? 0 : undefined}
+      onClick={onCardClick ? handleClick : undefined}
+      onKeyDown={
+        onCardClick
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleClick();
+              }
+            }
+          : undefined
+      }
+      className={`${cardStyle} p-6 rounded-lg hover:scale-105 transition-all relative ${onCardClick ? 'cursor-pointer' : ''}`}
+    >
       {/* Number on the right */}
       <div className={`absolute top-4 right-4 text-3xl font-bold ${textClass} opacity-30`}>
         {number}
@@ -333,20 +387,11 @@ function UnifiedCard({ item, isDark, type }: UnifiedCardProps) {
         )}
       </div>
       
-      {/* Page range */}
-      <div className={`text-center text-xs ${mutedClass} mb-3`}>
+      {/* Page range and cards count */}
+      <div className={`text-center text-xs ${mutedClass}`}>
         Pages {pageRange}
+        {hasCards && ` · ${item.masteredCards}/${item.totalCards} cards`}
       </div>
-      
-      {/* Progress (only if cards exist) */}
-      {hasCards && (
-        <>
-          <div className={`w-full h-2 ${getColor()} rounded-full mb-2`} />
-          <div className={`text-center text-xs ${mutedClass}`}>
-            {item.masteredCards}/{item.totalCards} cards
-          </div>
-        </>
-      )}
     </div>
   );
 }

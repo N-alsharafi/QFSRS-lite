@@ -7,56 +7,97 @@ import { useThemeStore } from '@/lib/stores/theme-store';
 import { State } from 'ts-fsrs';
 import type { Card } from '@/types/database';
 
+export type CardListFilterType =
+  | 'all'
+  | 'new'
+  | 'learning'
+  | 'review'
+  | 'dueToday'
+  | 'dueThisWeek'
+  | 'surah'
+  | 'pageRange';
+
+export interface CardListFilterParams {
+  surahNumber?: number;
+  startPage?: number;
+  endPage?: number;
+}
+
 interface CardListModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  filterType: 'all' | 'new' | 'learning' | 'review' | 'dueToday' | 'dueThisWeek';
+  filterType: CardListFilterType;
+  filterParams?: CardListFilterParams;
 }
 
-export function CardListModal({ isOpen, onClose, title, filterType }: CardListModalProps) {
+export function CardListModal({ isOpen, onClose, title, filterType, filterParams }: CardListModalProps) {
   const { currentTheme } = useThemeStore();
   const isDark = currentTheme === 'tamkeen-dark';
-  
-  const cards = useLiveQuery(async () => {
-    const allCards = await db.cards.toArray();
-    
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    
-    const nextWeek = new Date(today);
-    nextWeek.setDate(nextWeek.getDate() + 7);
-    
-    let filtered: Card[];
-    
-    switch (filterType) {
-      case 'all':
-        filtered = allCards;
-        break;
-      case 'new':
-        filtered = allCards.filter(c => c.state === State.New);
-        break;
-      case 'learning':
-        filtered = allCards.filter(c => c.state === State.Learning);
-        break;
-      case 'review':
-        filtered = allCards.filter(c => c.state === State.Review);
-        break;
-      case 'dueToday':
-        filtered = allCards.filter(c => c.due <= tomorrow);
-        break;
-      case 'dueThisWeek':
-        filtered = allCards.filter(c => c.due > tomorrow && c.due <= nextWeek);
-        break;
-      default:
-        filtered = allCards;
-    }
-    
-    return filtered.sort((a, b) => a.pageNumber - b.pageNumber);
-  }, [filterType]);
+
+  const cards = useLiveQuery(
+    async () => {
+      const allCards = await db.cards.toArray();
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      const nextWeek = new Date(today);
+      nextWeek.setDate(nextWeek.getDate() + 7);
+
+      let filtered: Card[];
+
+      switch (filterType) {
+        case 'all':
+          filtered = allCards;
+          break;
+        case 'new':
+          filtered = allCards.filter((c) => c.state === State.New);
+          break;
+        case 'learning':
+          filtered = allCards.filter((c) => c.state === State.Learning);
+          break;
+        case 'review':
+          filtered = allCards.filter((c) => c.state === State.Review);
+          break;
+        case 'dueToday':
+          filtered = allCards.filter((c) => c.due <= tomorrow);
+          break;
+        case 'dueThisWeek':
+          filtered = allCards.filter((c) => c.due > tomorrow && c.due <= nextWeek);
+          break;
+        case 'surah':
+          filtered =
+            filterParams?.surahNumber != null
+              ? allCards.filter((c) => c.surahNumber === filterParams.surahNumber)
+              : [];
+          break;
+        case 'pageRange':
+          filtered =
+            filterParams?.startPage != null && filterParams?.endPage != null
+              ? allCards.filter(
+                  (c) =>
+                    c.pageNumber >= filterParams!.startPage! &&
+                    c.pageNumber <= filterParams!.endPage!
+                )
+              : [];
+          break;
+        default:
+          filtered = allCards;
+      }
+
+      return filtered.sort((a, b) => a.pageNumber - b.pageNumber);
+    },
+    [
+      filterType,
+      filterParams?.surahNumber,
+      filterParams?.startPage,
+      filterParams?.endPage,
+    ]
+  );
   
   if (!isOpen) return null;
   

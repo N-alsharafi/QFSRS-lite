@@ -4,26 +4,27 @@ import { useState } from 'react';
 import { useThemeStore } from '@/lib/stores/theme-store';
 import { SurahGrid } from '@/components/review/SurahGrid';
 import { ReviewStats } from '@/components/review/ReviewStats';
-import { CardListModal } from '@/components/review/CardListModal';
+import { CardListModal, type CardListFilterType, type CardListFilterParams } from '@/components/review/CardListModal';
 import { IslamicPattern } from '@/components/ui/IslamicPattern';
 import Link from 'next/link';
 
 export default function ReviewDashboard() {
   const { currentTheme } = useThemeStore();
   const isDark = currentTheme === 'tamkeen-dark';
-  
+
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
-    filterType: 'all' | 'new' | 'learning' | 'review' | 'dueToday' | 'dueThisWeek';
+    filterType: CardListFilterType;
     title: string;
+    filterParams?: CardListFilterParams;
   }>({
     isOpen: false,
     filterType: 'all',
     title: '',
   });
-  
+
   const handleStatClick = (
-    filterType: 'all' | 'new' | 'learning' | 'review' | 'dueToday' | 'dueThisWeek',
+    filterType: CardListFilterType,
     title: string
   ) => {
     setModalState({
@@ -32,9 +33,22 @@ export default function ReviewDashboard() {
       title,
     });
   };
-  
+
+  const handleIndexCardClick = (
+    filterType: 'surah' | 'pageRange',
+    title: string,
+    filterParams: CardListFilterParams
+  ) => {
+    setModalState({
+      isOpen: true,
+      filterType,
+      title,
+      filterParams,
+    });
+  };
+
   const handleCloseModal = () => {
-    setModalState(prev => ({ ...prev, isOpen: false }));
+    setModalState((prev) => ({ ...prev, isOpen: false }));
   };
   
   const bgClass = isDark ? 'bg-tamkeenDark-background' : 'bg-tamkeen-background';
@@ -56,15 +70,18 @@ export default function ReviewDashboard() {
       
       <main className="relative z-10 max-w-7xl mx-auto p-6 pt-24 space-y-8">
         <ReviewStats onStatClick={handleStatClick} />
-        <SurahGrid />
+        <SurahGrid onCardClick={handleIndexCardClick} />
       </main>
       
-      <CardListModal
-        isOpen={modalState.isOpen}
-        onClose={handleCloseModal}
-        title={modalState.title}
-        filterType={modalState.filterType}
-      />
+      {modalState.isOpen && (
+        <CardListModal
+          isOpen={modalState.isOpen}
+          onClose={handleCloseModal}
+          title={modalState.title}
+          filterType={modalState.filterType}
+          filterParams={modalState.filterParams}
+        />
+      )}
     </div>
   );
 }
