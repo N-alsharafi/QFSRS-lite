@@ -100,8 +100,8 @@ export function VerseContext({ pageNumber }: VerseContextProps) {
       {prevVerse && (
         <div>
           <p className={`text-sm font-semibold ${mutedClass} mb-2`}>
-            Last verse of page {pageNumber - 1}: {getSurahMeta(prevVerse.surah as Surah).transliteration}{' '}
-            {prevVerse.ayah}
+            Last verse of previous page ({getSurahMeta(prevVerse.surah as Surah).transliteration}{':'}
+            {prevVerse.ayah})
           </p>
           <div className={`${verseBoxStyle} p-3 rounded-lg`}>
             <p className={`text-lg arabic-clear text-right leading-[calc(1em+14px)] ${primaryClass}`} dir="rtl">
@@ -114,8 +114,8 @@ export function VerseContext({ pageNumber }: VerseContextProps) {
       {nextVerse && (
         <div className={prevVerse ? 'border-t border-current/10 pt-4' : ''}>
           <p className={`text-sm font-semibold ${mutedClass} mb-2`}>
-            First verse of page {pageNumber + 1}: {getSurahMeta(nextVerse.surah as Surah).transliteration}{' '}
-            {nextVerse.ayah}
+            First verse of next page ({getSurahMeta(nextVerse.surah as Surah).transliteration}{':'}
+            {nextVerse.ayah})
           </p>
           <div className={`${verseBoxStyle} p-3 rounded-lg`}>
             <p className={`text-lg arabic-clear text-right leading-[calc(1em+14px)] ${primaryClass}`} dir="rtl">
@@ -124,10 +124,6 @@ export function VerseContext({ pageNumber }: VerseContextProps) {
           </div>
         </div>
       )}
-
-      <p className={`text-xs ${mutedClass} text-center pt-2 border-t border-current/10`}>
-        Context around page {pageNumber}
-      </p>
     </div>
   );
 }
