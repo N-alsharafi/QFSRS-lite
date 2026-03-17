@@ -26,7 +26,7 @@ export default function Home() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `Nukat-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `Nuqat-backup-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -41,7 +41,7 @@ export default function Home() {
       setHasConfig(true);
       router.refresh();
     } catch (err) {
-      alert('Invalid backup file. Please select a valid Nukat export.');
+      alert('Invalid backup file. Please select a valid Nuqat export.');
     }
     e.target.value = '';
   };
@@ -117,7 +117,7 @@ export default function Home() {
           {/* English Subtitle */}
           <div className="space-y-4 mb-12">
             <h2 className={`text-4xl md:text-5xl font-bold ${styles.title}`}>
-              Nukat
+              Nuqat
             </h2>
             <p className={`text-xl md:text-2xl ${styles.subtitle} max-w-4xl mx-auto`}>
               Master Quran memorization through the power of spaced repetition
@@ -256,7 +256,7 @@ export default function Home() {
         {/* Footer */}
         <div className={`text-center space-y-4 mt-8 ${styles.text}`}>
           <p className={`text-sm ${styles.subtitle} max-w-2xl mx-auto leading-relaxed`}>
-            This version of Nukat runs completely on your local machine. No accounts, no tracking, no cloud storage.
+            This version of Nuqat runs completely on your local machine. No accounts, no tracking, no cloud storage.
           </p>
         </div>
       </main>

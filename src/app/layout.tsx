@@ -26,13 +26,13 @@ const amiri = Amiri({
 });
 
 export const metadata: Metadata = {
-  title: "Nukat",
+  title: "Nuqat",
   description: "Review Quran more efficiently with spaced repetition",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Nukat",
+    title: "Nuqat",
   },
 };
 

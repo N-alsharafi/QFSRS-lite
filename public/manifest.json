@@ -1,6 +1,6 @@
 {
-  "name": "Nukat - Quran Memorization with FSRS",
-  "short_name": "Nukat",
+  "name": "Nuqat - Quran Memorization with FSRS",
+  "short_name": "Nuqat",
   "description": "Master Quran memorization through spaced repetition (FSRS)",
   "start_url": "/",
   "display": "standalone",
