@@ -59,6 +59,63 @@ export function getPageVerseRange(pageNumber: Page) {
   };
 }
 
+export interface PageSurahInfo {
+  surah: number;
+  firstAyah: number;
+  lastAyah: number;
+  transliteration: string;
+}
+
+/**
+ * Get all surahs present on a page with their verse ranges.
+ * Some pages span multiple surahs (e.g. end of Al-Isra, start of Al-Kahf).
+ */
+export function getPageSurahs(pageNumber: Page): PageSurahInfo[] {
+  const range = getPageVerseRange(pageNumber);
+  const firstSurah = range.first.surah;
+  const lastSurah = range.last.surah;
+
+  if (firstSurah === lastSurah) {
+    const meta = getSurahMeta(firstSurah as Surah);
+    return [{
+      surah: firstSurah,
+      firstAyah: range.first.ayah,
+      lastAyah: range.last.ayah,
+      transliteration: meta.transliteration ?? `Surah ${firstSurah}`,
+    }];
+  }
+
+  const result: PageSurahInfo[] = [];
+  const firstMeta = getSurahMeta(firstSurah as Surah);
+  const lastMeta = getSurahMeta(lastSurah as Surah);
+
+  result.push({
+    surah: firstSurah,
+    firstAyah: range.first.ayah,
+    lastAyah: firstMeta.ayahs,
+    transliteration: firstMeta.transliteration ?? `Surah ${firstSurah}`,
+  });
+
+  for (let s = firstSurah + 1; s < lastSurah; s++) {
+    const meta = getSurahMeta(s as Surah);
+    result.push({
+      surah: s,
+      firstAyah: 1,
+      lastAyah: meta.ayahs,
+      transliteration: meta.transliteration ?? `Surah ${s}`,
+    });
+  }
+
+  result.push({
+    surah: lastSurah,
+    firstAyah: 1,
+    lastAyah: range.last.ayah,
+    transliteration: lastMeta.transliteration ?? `Surah ${lastSurah}`,
+  });
+
+  return result;
+}
+
 /**
  * Get first and last verses of a surah
  */
