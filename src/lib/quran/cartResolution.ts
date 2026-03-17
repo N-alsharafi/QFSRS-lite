@@ -18,6 +18,10 @@ export interface FilledGeneralConfig {
   confidence: ConfidenceLevel;
   timeKnown: TimeKnown;
   reviewFrequency: ReviewFrequency;
+  /** User makes many mistakes on this range → lower initial stability */
+  makesManyMistakes?: boolean;
+  /** Range is particularly difficult → higher initial difficulty */
+  isDifficult?: boolean;
 }
 
 export type RangeType = 'page' | 'surah' | 'juz';
@@ -156,7 +160,9 @@ export function groupResolvedPages(
       last &&
       last.config.confidence === resolvedPage.config.confidence &&
       last.config.timeKnown === resolvedPage.config.timeKnown &&
-      last.config.reviewFrequency === resolvedPage.config.reviewFrequency;
+      last.config.reviewFrequency === resolvedPage.config.reviewFrequency &&
+      last.config.makesManyMistakes === resolvedPage.config.makesManyMistakes &&
+      last.config.isDifficult === resolvedPage.config.isDifficult;
 
     if (sameConfig && last && pageNum === last.pageNumber + 1) {
       currentGroup.push(resolvedPage);
@@ -189,6 +195,12 @@ function buildGroup(pages: ResolvedPage[]): ResolvedGroup {
     first.config.timeKnown,
     first.config.reviewFrequency
   );
+  if (first.config.makesManyMistakes) {
+    cardOptions.initialStability = Math.floor((cardOptions.initialStability || 0) * 0.5);
+  }
+  if (first.config.isDifficult) {
+    cardOptions.initialDifficulty = 7;
+  }
   return {
     pages: pages.map((p) => p.pageNumber),
     config: first.config,

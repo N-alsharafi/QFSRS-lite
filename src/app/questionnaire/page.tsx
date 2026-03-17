@@ -336,9 +336,7 @@ export default function QuestionnairePage() {
                 </div>
 
                 <AddToCartForm
-                  entries={cartEntries}
                   onAddEntry={(entry) => setCartEntries((prev) => [...prev, entry])}
-                  onRemoveEntry={(id) => setCartEntries((prev) => prev.filter((e) => e.id !== id))}
                   isDark={isDark}
                   styles={styles}
                 />
