@@ -1,13 +1,65 @@
 'use client';
 
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useThemeStore } from '@/lib/stores/theme-store';
 import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher';
 import { IslamicPattern } from '@/components/ui/IslamicPattern';
+import { db } from '@/lib/db/schema';
+import { exportUserData, importUserData, type ExportData } from '@/lib/db/exportImport';
 
 export default function Home() {
+  const router = useRouter();
   const { currentTheme } = useThemeStore();
   const isDark = currentTheme === 'tamkeen-dark';
+  const [hasConfig, setHasConfig] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    db.config.count().then((n) => setHasConfig(n > 0));
+  }, []);
+
+  const handleExport = async () => {
+    const data = await exportUserData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `raj3-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text) as ExportData;
+      await importUserData(data);
+      setHasConfig(true);
+      router.refresh();
+    } catch (err) {
+      alert('Invalid backup file. Please select a valid Raj3 export.');
+    }
+    e.target.value = '';
+  };
+
+  const handleReviewClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    // Check if config exists
+    const configs = await db.config.toArray();
+    
+    if (configs.length === 0) {
+      // No config, redirect to questionnaire
+      router.push('/questionnaire');
+    } else {
+      // Config exists, go to review page
+      router.push('/review');
+    }
+  };
 
   // Tamkeen theme styles
   const styles = isDark ? {
@@ -76,17 +128,68 @@ export default function Home() {
           <div className={`mx-auto w-32 h-1 ${styles.decorative} rounded-full`} />
         </div>
 
-        {/* Theme Switcher */}
-        <div className={`${styles.card} rounded-2xl shadow-xl overflow-hidden p-8`}>
-          <div className={`text-center mb-6`}>
-            <h3 className={`text-2xl font-bold mb-2 ${styles.title}`}>
-              Appearance
-            </h3>
-            <p className={`text-sm ${styles.subtitle}`}>
-              Choose light or dark mode
-            </p>
+        {/* Appearance + Export/Import */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl items-start">
+          {/* Theme Switcher */}
+          <div className={`${styles.card} rounded-2xl shadow-xl overflow-hidden p-8`}>
+            <div className="text-center mb-6">
+              <h3 className={`text-2xl font-bold mb-2 ${styles.title}`}>
+                Appearance
+              </h3>
+              <p className={`text-sm ${styles.subtitle}`}>
+                Choose light or dark mode
+              </p>
+            </div>
+            <ThemeSwitcher />
           </div>
-          <ThemeSwitcher />
+
+          {/* Export/Import */}
+          <div className={`${styles.card} rounded-2xl shadow-xl overflow-hidden p-8`}>
+            <div className="text-center mb-6">
+              <h3 className={`text-2xl font-bold mb-2 ${styles.title}`}>
+                Backup & Restore
+              </h3>
+              <p className={`text-sm ${styles.subtitle}`}>
+                Export or import your settings and progress
+              </p>
+            </div>
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={handleExport}
+                disabled={!hasConfig}
+                title="Export settings & progress"
+                className={`flex flex-col items-center justify-center gap-1 w-20 py-3 rounded-xl text-xs font-medium transition-all ${
+                  hasConfig
+                    ? isDark
+                      ? 'bg-tamkeenDark-primary/90 text-tamkeenDark-background hover:opacity-90'
+                      : 'bg-tamkeen-primary/90 text-tamkeen-surface hover:opacity-90'
+                    : 'bg-gray-400/30 text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                <span className="text-2xl">📤</span>
+                Export
+              </button>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                title="Import settings & progress"
+                className={`flex flex-col items-center justify-center gap-1 w-20 py-3 rounded-xl text-xs font-medium transition-all ${
+                  isDark
+                    ? 'border-2 border-tamkeenDark-primary/30 text-tamkeenDark-text hover:border-tamkeenDark-accent'
+                    : 'border-2 border-tamkeen-accent/20 text-tamkeen-text hover:border-tamkeen-primary'
+                }`}
+              >
+                <span className="text-2xl">📥</span>
+                Import
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".json"
+                onChange={handleImport}
+                className="hidden"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Feature Cards with Islamic-inspired design */}
@@ -111,7 +214,10 @@ export default function Home() {
             </div>
           </Link>
 
-          <div className={`group relative flex flex-col items-center gap-6 rounded-2xl ${styles.card} p-10 shadow-xl transition-all hover:scale-105 ${styles.hover}`}>
+          <button
+            onClick={handleReviewClick}
+            className={`group relative flex flex-col items-center gap-6 rounded-2xl ${styles.card} p-10 shadow-xl transition-all hover:scale-105 ${styles.hover} w-full`}
+          >
             {/* Decorative corner */}
             <div className={`absolute top-0 right-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-bl-full`} />
             <div className={`absolute bottom-0 left-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-tr-full`} />
@@ -124,9 +230,9 @@ export default function Home() {
               Optimize your retention with FSRS-powered intelligent review scheduling
             </p>
             <div className={`mt-2 px-4 py-1 rounded-full text-sm ${styles.accent}`}>
-              Coming Soon
+              View Dashboard →
             </div>
-          </div>
+          </button>
         </div>
 
         {/* Feature Highlights */}

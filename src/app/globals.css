@@ -26,9 +26,18 @@
 /* Arabic Typography */
 @layer utilities {
   .arabic-text {
-    font-family: 'Aref Ruqaa', serif;
+    font-family: var(--font-aref-ruqaa), 'Aref Ruqaa', serif;
     font-weight: 700;
     letter-spacing: 0.02em;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .arabic-clear {
+    font-family: var(--font-amiri), 'Amiri', serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

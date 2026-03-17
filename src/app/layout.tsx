@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Aref_Ruqaa } from "next/font/google";
+import { Geist, Geist_Mono, Aref_Ruqaa, Amiri } from "next/font/google";
 import { DEFAULT_THEME_COLOR } from "@/lib/constants/theme";
 import "./globals.css";
 
@@ -17,6 +17,12 @@ const arefRuqaa = Aref_Ruqaa({
   weight: ['700'],
   subsets: ["arabic"],
   variable: "--font-aref-ruqaa",
+});
+
+const amiri = Amiri({
+  weight: ['400', '700'],
+  subsets: ["arabic"],
+  variable: "--font-amiri",
 });
 
 export const metadata: Metadata = {
@@ -45,7 +51,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${arefRuqaa.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${arefRuqaa.variable} ${amiri.variable} antialiased`}
       >
         {children}
       </body>
