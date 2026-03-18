@@ -15,9 +15,11 @@ interface CardListProps {
   emptyMessage?: string;
   /** Optional: subtitle for empty state */
   emptySubMessage?: string;
+  /** Called when user clicks Review Now - receives cards to review and display label */
+  onReviewClick?: (cards: Card[], label: string) => void;
 }
 
-export function CardList({ cards, emptyMessage = 'No cards found', emptySubMessage = 'There are no cards matching this filter' }: CardListProps) {
+export function CardList({ cards, emptyMessage = 'No cards found', emptySubMessage = 'There are no cards matching this filter', onReviewClick }: CardListProps) {
   const { currentTheme } = useThemeStore();
   const isDark = currentTheme === 'tamkeen-dark';
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
@@ -78,6 +80,7 @@ export function CardList({ cards, emptyMessage = 'No cards found', emptySubMessa
                   </p>
                 </div>
                 <button
+                  onClick={() => onReviewClick?.([card], `Page ${card.pageNumber}`)}
                   className={`${buttonClass} px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-transform`}
                 >
                   Review Now
@@ -98,6 +101,7 @@ export function CardList({ cards, emptyMessage = 'No cards found', emptySubMessa
             titleClass={titleClass}
             mutedClass={mutedClass}
             buttonClass={buttonClass}
+            onReviewClick={onReviewClick}
           />
         );
       })}
@@ -113,6 +117,7 @@ interface GroupSectionProps {
   titleClass: string;
   mutedClass: string;
   buttonClass: string;
+  onReviewClick?: (cards: Card[], label: string) => void;
 }
 
 function GroupSection({
@@ -123,6 +128,7 @@ function GroupSection({
   titleClass,
   mutedClass,
   buttonClass,
+  onReviewClick,
 }: GroupSectionProps) {
   const juzLabel = group.juz != null ? ` · Juz ${group.juz}` : '';
   const expandButtonClass = titleClass;
@@ -171,6 +177,7 @@ function GroupSection({
           </div>
           <div className="flex items-center gap-2">
             <button
+              onClick={() => onReviewClick?.(group.cards, group.label)}
               className={`${buttonClass} px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-transform`}
             >
               Review Now
@@ -208,6 +215,7 @@ function GroupSection({
                     </p>
                   </div>
                   <button
+                    onClick={() => onReviewClick?.([card], `Page ${card.pageNumber}`)}
                     className={`${buttonClass} px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-transform`}
                   >
                     Review Now

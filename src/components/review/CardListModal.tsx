@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db/schema';
 import { CardList } from '@/components/review/CardList';
+import { ReviewStatsModal } from '@/components/review/ReviewStatsModal';
 import { useThemeStore } from '@/lib/stores/theme-store';
 import { State } from 'ts-fsrs';
 import type { Card } from '@/types/database';
@@ -34,6 +36,11 @@ interface CardListModalProps {
 export function CardListModal({ isOpen, onClose, title, filterType, filterParams }: CardListModalProps) {
   const { currentTheme } = useThemeStore();
   const isDark = currentTheme === 'tamkeen-dark';
+
+  const [reviewModal, setReviewModal] = useState<{
+    cards: Card[];
+    label: string;
+  } | null>(null);
 
   const cards = useLiveQuery(
     async () => {
@@ -150,10 +157,28 @@ export function CardListModal({ isOpen, onClose, title, filterType, filterParams
               <p className={mutedClass}>There are no cards matching this filter</p>
             </div>
           ) : (
-            <CardList cards={cards} emptyMessage="No cards found" />
+            <CardList
+              cards={cards}
+              emptyMessage="No cards found"
+              onReviewClick={(cardsToReview, label) =>
+                setReviewModal({ cards: cardsToReview, label })
+              }
+            />
           )}
         </div>
       </div>
+
+      {reviewModal && (
+        <ReviewStatsModal
+          isOpen={!!reviewModal}
+          onClose={() => setReviewModal(null)}
+          cards={reviewModal.cards}
+          label={reviewModal.label}
+          onSuccess={() => {
+            /* Cards will refresh via useLiveQuery */
+          }}
+        />
+      )}
     </div>
   );
 }
