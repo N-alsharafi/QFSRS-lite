@@ -128,8 +128,74 @@ export default function Home() {
           <div className={`mx-auto w-32 h-1 ${styles.decorative} rounded-full`} />
         </div>
 
-        {/* Appearance + Export/Import */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl items-start">
+        {/* Feature Cards with Islamic-inspired design */}
+        <div className="grid gap-8 md:grid-cols-2 w-full max-w-4xl">
+          <Link
+            href="/reader"
+            className={`group relative flex flex-col items-center gap-6 rounded-2xl ${styles.card} p-10 shadow-xl transition-all hover:scale-105 ${styles.hover}`}
+          >
+            {/* Decorative corner */}
+            <div className={`absolute top-0 right-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-bl-full`} />
+            <div className={`absolute bottom-0 left-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-tr-full`} />
+            
+            <div className="text-6xl group-hover:scale-110 transition-transform">📖</div>
+            <h3 className={`text-3xl font-bold ${styles.title}`}>
+              Start Reading
+            </h3>
+            <p className={`text-center ${styles.subtitle} leading-relaxed`}>
+              Experience the Quran with spatial consistency, designed for deep memorization
+            </p>
+            <div className={`mt-2 px-4 py-1 rounded-full text-sm ${styles.accent}`}>
+              Begin Journey →
+            </div>
+          </Link>
+
+          <button
+            onClick={handleReviewClick}
+            className={`group relative flex flex-col items-center gap-6 rounded-2xl ${styles.card} p-10 shadow-xl transition-all hover:scale-105 ${styles.hover} w-full`}
+          >
+            {/* Decorative corner */}
+            <div className={`absolute top-0 right-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-bl-full`} />
+            <div className={`absolute bottom-0 left-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-tr-full`} />
+            
+            <div className="text-6xl group-hover:scale-110 transition-transform">🎯</div>
+            <h3 className={`text-3xl font-bold ${styles.title}`}>
+              Review Sessions
+            </h3>
+            <p className={`text-center ${styles.subtitle} leading-relaxed`}>
+              Optimize your retention with FSRS-powered intelligent review scheduling
+            </p>
+            <div className={`mt-2 px-4 py-1 rounded-full text-sm ${styles.accent}`}>
+              View Dashboard →
+            </div>
+          </button>
+        </div>
+
+
+        {/* What is this? | Appearance | Backup & Restore | Settings */}
+        <div className="w-full max-w-[100vw] px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full items-start">
+            {/* What is this? */}
+          <Link
+            href="/what-is-this"
+            className={`group relative flex flex-col items-center gap-4 rounded-2xl ${styles.card} p-8 shadow-xl transition-all hover:scale-105 ${styles.hover}`}
+          >
+            <div className={`absolute top-0 right-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-bl-full`} />
+            <div className={`absolute bottom-0 left-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-tr-full`} />
+            <div className="text-4xl group-hover:scale-110 transition-transform">📜</div>
+            <div className="text-center">
+              <h3 className={`text-xl font-bold mb-1 ${styles.title}`}>
+                What is this?
+              </h3>
+              <p className={`text-sm ${styles.subtitle}`}>
+                Spaced repetition & Quran memorization
+              </p>
+            </div>
+            <div className={`mt-auto px-4 py-1 rounded-full text-sm ${styles.accent}`}>
+              Read more →
+            </div>
+          </Link>
+
           {/* Theme Switcher */}
           <div className={`${styles.card} rounded-2xl shadow-xl overflow-hidden p-8`}>
             <div className="text-center mb-6">
@@ -190,50 +256,30 @@ export default function Home() {
               />
             </div>
           </div>
-        </div>
 
-        {/* Feature Cards with Islamic-inspired design */}
-        <div className="grid gap-8 md:grid-cols-2 w-full max-w-4xl">
+          {/* Settings */}
           <Link
-            href="/reader"
-            className={`group relative flex flex-col items-center gap-6 rounded-2xl ${styles.card} p-10 shadow-xl transition-all hover:scale-105 ${styles.hover}`}
+            href="/settings"
+            className={`group relative flex flex-col items-center gap-4 rounded-2xl ${styles.card} p-8 shadow-xl transition-all hover:scale-105 ${styles.hover}`}
           >
-            {/* Decorative corner */}
             <div className={`absolute top-0 right-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-bl-full`} />
             <div className={`absolute bottom-0 left-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-tr-full`} />
-            
-            <div className="text-6xl group-hover:scale-110 transition-transform">📖</div>
-            <h3 className={`text-3xl font-bold ${styles.title}`}>
-              Start Reading
-            </h3>
-            <p className={`text-center ${styles.subtitle} leading-relaxed`}>
-              Experience the Quran with spatial consistency, designed for deep memorization
-            </p>
-            <div className={`mt-2 px-4 py-1 rounded-full text-sm ${styles.accent}`}>
-              Begin Journey →
+            <div className="text-4xl group-hover:scale-110 transition-transform">⚙️</div>
+            <div className="text-center">
+              <h3 className={`text-xl font-bold mb-1 ${styles.title}`}>
+                Settings
+              </h3>
+              <p className={`text-sm ${styles.subtitle}`}>
+                Edit questionnaire answers
+              </p>
+            </div>
+            <div className={`mt-auto px-4 py-1 rounded-full text-sm ${styles.accent}`}>
+              Open Settings →
             </div>
           </Link>
-
-          <button
-            onClick={handleReviewClick}
-            className={`group relative flex flex-col items-center gap-6 rounded-2xl ${styles.card} p-10 shadow-xl transition-all hover:scale-105 ${styles.hover} w-full`}
-          >
-            {/* Decorative corner */}
-            <div className={`absolute top-0 right-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-bl-full`} />
-            <div className={`absolute bottom-0 left-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-tr-full`} />
-            
-            <div className="text-6xl group-hover:scale-110 transition-transform">🎯</div>
-            <h3 className={`text-3xl font-bold ${styles.title}`}>
-              Review Sessions
-            </h3>
-            <p className={`text-center ${styles.subtitle} leading-relaxed`}>
-              Optimize your retention with FSRS-powered intelligent review scheduling
-            </p>
-            <div className={`mt-2 px-4 py-1 rounded-full text-sm ${styles.accent}`}>
-              View Dashboard →
-            </div>
-          </button>
+          </div>
         </div>
+
 
         {/* Feature Highlights */}
         <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mt-8`}>
