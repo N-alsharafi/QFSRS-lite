@@ -7,6 +7,7 @@
 
 import { loadQuranData } from 'quran-search-engine';
 import { getJuzMeta, getRubAlHizbMeta, type RubAlHizbId, type Juz } from 'quran-meta/hafs';
+import { getPageVerseRange } from './metadata';
 
 // Cache for loaded Quran data
 let quranDataCache: Awaited<ReturnType<typeof loadQuranData>> | null = null;
@@ -82,6 +83,19 @@ export async function getJuzName(juzNumber: number): Promise<string> {
   }
   
   return `Juz ${juzNumber}`;
+}
+
+/**
+ * Get the first N words of the first verse on a page
+ * @param pageNumber - Quran page number (1-604)
+ * @param wordCount - Number of words (default: 6)
+ */
+export async function getPageFirstVerseSnippet(
+  pageNumber: number,
+  wordCount: number = 6
+): Promise<string> {
+  const range = getPageVerseRange(pageNumber as import('quran-meta/hafs').Page);
+  return getVerseSnippet(range.first.surah, range.first.ayah, wordCount);
 }
 
 /**
