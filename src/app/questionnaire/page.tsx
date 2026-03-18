@@ -11,7 +11,16 @@ import { AddToCartForm } from '@/components/questionnaire/AddToCartForm';
 import { SelectionCart } from '@/components/questionnaire/SelectionCart';
 import { initializeCardsForPageRange } from '@/lib/quran/initializeCards';
 import { resolveCart, groupResolvedPages, type CartEntry } from '@/lib/quran/cartResolution';
-
+import NextConfig from '../../../next.config';
+/** Base path for the app, check next.config, its basepath is defined, set it here */
+let basePath = NextConfig.basePath;
+if (basePath) {
+  /** If basepath is defined, set it to the basepath */
+  basePath = `/${basePath}`;
+} else {
+  /** If basepath is not defined, set it to empty string */
+  basePath = '';
+}
 type QuestionnaireStep = 'config' | 'cards';
 
 export default function QuestionnairePage() {
@@ -88,7 +97,7 @@ export default function QuestionnairePage() {
   };
 
   const handleSkip = () => {
-    router.push('/review');
+    router.push(`${basePath}/review`);
   };
 
   // Check if Step 2 form is valid (cart has at least one entry with resolved pages)
@@ -117,7 +126,7 @@ export default function QuestionnairePage() {
       }
 
       console.log(`✅ Setup complete! Created ${cardsCreated} cards`);
-      router.push('/review');
+      router.push(`${basePath}/review`);
     } catch (error) {
       console.error('Error initializing cards:', error);
     }
@@ -133,7 +142,7 @@ export default function QuestionnairePage() {
       
       {/* Floating Back Button */}
       <Link
-        href="/"
+        href={`${basePath}/`}
         className={`fixed top-6 left-6 z-50 px-6 py-3 rounded-xl ${buttonClass} font-semibold hover:scale-105 transition-all`}
       >
         ← Back

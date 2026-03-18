@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   },
   trailingSlash: true,
   reactStrictMode: true,
+  basePath: '/QFSRS-lite',
 };
 
 export default nextConfig;
