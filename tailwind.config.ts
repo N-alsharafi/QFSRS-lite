@@ -17,6 +17,9 @@ const config: Config = {
           surface: '#FFFFFF',      // Pure White for cards
           text: '#2D2416',         // Dark Brown
           textMuted: '#5A4A3A',    // Medium Brown
+          hesitation: '#CA8A04',   // Yellow/amber
+          mistake: '#B91C1C',      // Red
+          forget: '#6B7280',       // Grey
         },
         
         // Tamkeen Dark Mode
@@ -27,6 +30,9 @@ const config: Config = {
           surface: '#1A2820',      // Dark Green-Gray surface
           text: '#F0EBE3',         // Warm Off-White
           textMuted: '#B8C4B8',    // Greenish-Gray
+          hesitation: '#EAB308',   // Brighter yellow for dark
+          mistake: '#DC2626',      // Red
+          forget: '#9CA3AF',       // Lighter grey for dark
         },
       },
     },
