@@ -89,7 +89,7 @@ export default function Home() {
       {/* Islamic Geometric Pattern Background */}
       <IslamicPattern theme={currentTheme} />
 
-      <main className="relative z-10 flex w-full max-w-7xl flex-col items-center gap-16 px-8 py-20">
+      <main className="relative z-10 flex w-full max-w-screen-2xl flex-col items-center gap-16 px-8 py-20">
         {/* Hero Section with Arabic Calligraphy */}
         <div className="text-center">
           {/* Decorative Top Border */}
@@ -172,9 +172,9 @@ export default function Home() {
         </div>
 
 
-        {/* What is this? | Appearance | Backup & Restore | Settings */}
+        {/* What is this? | Appearance | Backup & Restore | Settings | Suggest/Report */}
         <div className="w-full max-w-[100vw] px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 w-full items-start">
             {/* What is this? */}
           <Link
             href="/what-is-this"
@@ -258,9 +258,17 @@ export default function Home() {
           </div>
 
           {/* Settings */}
-          <Link
-            href="/settings"
-            className={`group relative flex flex-col items-center gap-4 rounded-2xl ${styles.card} p-8 shadow-xl transition-all hover:scale-105 ${styles.hover}`}
+          <button
+            type="button"
+            onClick={() => {
+              if (!hasConfig) {
+                alert('Please complete the Questionnaire first to edit settings.');
+                router.push('/questionnaire');
+              } else {
+                router.push('/settings');
+              }
+            }}
+            className={`group relative flex flex-col items-center gap-4 rounded-2xl ${styles.card} p-8 shadow-xl transition-all hover:scale-105 ${styles.hover} w-full text-left`}
           >
             <div className={`absolute top-0 right-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-bl-full`} />
             <div className={`absolute bottom-0 left-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-tr-full`} />
@@ -276,7 +284,30 @@ export default function Home() {
             <div className={`mt-auto px-4 py-1 rounded-full text-sm ${styles.accent}`}>
               Open Settings →
             </div>
-          </Link>
+          </button>
+
+          {/* Suggest features / Report bugs */}
+          <a
+            href="https://github.com/N-alsharafi/QFSRS-lite/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`group relative flex flex-col items-center gap-4 rounded-2xl ${styles.card} p-8 shadow-xl transition-all hover:scale-105 ${styles.hover}`}
+          >
+            <div className={`absolute top-0 right-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-bl-full`} />
+            <div className={`absolute bottom-0 left-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-tr-full`} />
+            <div className="text-4xl group-hover:scale-110 transition-transform">💬</div>
+            <div className="text-center">
+              <h3 className={`text-xl font-bold mb-1 ${styles.title}`}>
+                Suggest / Report
+              </h3>
+              <p className={`text-sm ${styles.subtitle}`}>
+                What would you like to see added/fixed?
+              </p>
+            </div>
+            <div className={`mt-auto px-4 py-1 rounded-full text-sm ${styles.accent}`}>
+              Open GitHub →
+            </div>
+          </a>
           </div>
         </div>
 
