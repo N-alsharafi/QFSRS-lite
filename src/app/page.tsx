@@ -8,17 +8,6 @@ import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher';
 import { IslamicPattern } from '@/components/ui/IslamicPattern';
 import { db } from '@/lib/db/schema';
 import { exportUserData, importUserData, type ExportData } from '@/lib/db/exportImport';
-import NextConfig from '../../next.config';
-
-/** Base path for the app, check next.config, its basepath is defined, set it here */
-let basePath = NextConfig.basePath;
-if (basePath) {
-  /** If basepath is defined, set it to the basepath */
-  basePath = `/${basePath}`;
-} else {
-  /** If basepath is not defined, set it to empty string */
-  basePath = '';
-}
 
 export default function Home() {
   const router = useRouter();
@@ -65,10 +54,10 @@ export default function Home() {
     
     if (configs.length === 0) {
       // No config, redirect to questionnaire
-      router.push(`${basePath}/questionnaire`);
+      router.push('/questionnaire');
     } else {
       // Config exists, go to review page
-      router.push(`${basePath}/review`);
+      router.push('/review');
     }
   };
 
@@ -142,7 +131,7 @@ export default function Home() {
         {/* Feature Cards with Islamic-inspired design */}
         <div className="grid gap-8 md:grid-cols-2 w-full max-w-4xl">
           <Link
-            href={`${basePath}/reader`}
+            href="/reader"
             className={`group relative flex flex-col items-center gap-6 rounded-2xl ${styles.card} p-10 shadow-xl transition-all hover:scale-105 ${styles.hover}`}
           >
             {/* Decorative corner */}
@@ -188,7 +177,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 w-full items-start">
             {/* What is this? */}
           <Link
-            href={`${basePath}/what-is-this`}
+            href="/what-is-this"
             className={`group relative flex flex-col items-center gap-4 rounded-2xl ${styles.card} p-8 shadow-xl transition-all hover:scale-105 ${styles.hover}`}
           >
             <div className={`absolute top-0 right-0 w-20 h-20 ${styles.decorative} opacity-10 rounded-bl-full`} />
@@ -274,10 +263,10 @@ export default function Home() {
             onClick={() => {
               if (!hasConfig) {
                 alert('Please complete the Questionnaire first to edit settings.');
-                router.push(`${basePath}/questionnaire`);
+                router.push('/questionnaire');
                 return;
               }
-              return router.push(`${basePath}/settings`);
+              return router.push('/settings');
             }}
             className={`group relative flex flex-col items-center gap-4 rounded-2xl ${styles.card} p-8 shadow-xl transition-all hover:scale-105 ${styles.hover} w-full text-left`}
           >

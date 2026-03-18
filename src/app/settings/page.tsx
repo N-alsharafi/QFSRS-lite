@@ -16,16 +16,7 @@ import { getPageSurahs } from '@/lib/quran/metadata';
 import { State } from 'ts-fsrs';
 import type { Card } from '@/types/database';
 import type { Page } from 'quran-meta/hafs';
-import NextConfig from '../../../next.config';
-/** Base path for the app, check next.config, its basepath is defined, set it here */
-let basePath = NextConfig.basePath;
-if (basePath) {
-  /** If basepath is defined, set it to the basepath */
-  basePath = `/${basePath}`;
-} else {
-  /** If basepath is not defined, set it to empty string */
-  basePath = '';
-}
+
 type SettingsTab = 'config' | 'cards';
 
 function formatStateSummary(cards: Card[]): string {
@@ -441,7 +432,7 @@ export default function SettingsPage() {
       <IslamicPattern theme={currentTheme} />
 
       <Link
-        href={`${basePath}/`}
+        href="/"
         className={`fixed top-6 left-6 z-50 px-6 py-3 rounded-xl ${buttonClass} font-semibold hover:scale-105 transition-all`}
       >
         ← Back
